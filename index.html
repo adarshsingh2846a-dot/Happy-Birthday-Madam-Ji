@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Happy Birthday</title>
+
+<style>
+
+body{
+background:white;
+color:black;
+font-family:Segoe UI;
+text-align:center;
+margin:0;
+}
+
+.page{
+display:none;
+padding:30px;
+opacity:0;
+transition:.5s;
+}
+
+.active{
+display:block;
+opacity:1;
+}
+
+button{
+background:#ffd6dc;
+border:none;
+padding:14px 28px;
+margin:10px;
+font-size:18px;
+border-radius:10px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#ffb3c1;
+transform:scale(1.05);
+}
+
+img{
+width:260px;
+margin:20px;
+border-radius:10px;
+}
+
+.title{
+font-size:36px;
+margin-top:40px;
+}
+
+.text{
+color:#444;
+font-size:20px;
+}
+
+.note{
+background:#f3f3f3;
+padding:25px;
+border-radius:15px;
+max-width:500px;
+margin:auto;
+line-height:1.6;
+}
+
+.candle{
+width:14px;
+height:40px;
+background:black;
+margin:auto;
+border-radius:4px;
+position:relative;
+}
+
+.flame{
+width:12px;
+height:18px;
+background:orange;
+border-radius:50%;
+position:absolute;
+top:-18px;
+left:1px;
+animation:flicker .15s infinite;
+}
+
+@keyframes flicker{
+0%{transform:scale(1);}
+50%{transform:scale(1.25);}
+100%{transform:scale(1);}
+}
+
+.fancy{
+font-size:42px;
+color:#ff6b81;
+}
+
+.heart{
+font-size:26px;
+animation:float 2s infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0);}
+50%{transform:translateY(-8px);}
+100%{transform:translateY(0);}
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div id="p1" class="page active">
+
+<h1 class="title">
+Happy Birthday Akshita (Topper Ji) 🎉
+</h1>
+
+<p class="text">
+Here is your surprise. Open it?
+</p>
+
+<button onclick="next('p2')">
+Yes 🙂
+</button>
+
+<button onclick="next('pNo1')">
+No 😒
+</button>
+
+</div>
+
+
+<div id="pNo1" class="page">
+
+<img src="goat_cry.png">
+
+<p>Please 🥺</p>
+
+<button onclick="next('p2')">
+Ok fine 😒
+</button>
+
+<button onclick="next('p2')">
+Okay 🤗
+</button>
+
+</div>
+
+
+<div id="p2" class="page">
+
+<h2>Tap to see the surprise</h2>
+
+<button onclick="showText()">
+Tap 🎁
+</button>
+
+<div id="text1" style="display:none">
+
+<h1 class="fancy">
+Happy Birthday Pari 🎀
+</h1>
+
+<button onclick="showCake()">
+Tap again 🎂
+</button>
+
+</div>
+
+</div>
+
+
+<div id="cake" class="page">
+
+<h2>Your birthday cake 🎂</h2>
+
+<div class="candle">
+
+<div class="flame" id="flame"></div>
+
+</div>
+
+<img src="cake.png">
+
+<p id="blowText">
+Blow air to blow the candle 🎤
+</p>
+
+<button onclick="startMic()">
+Blow 🕯️
+</button>
+
+</div>
+
+
+<div id="celebrate" class="page">
+
+<h1>Yay!!! 🥳🥳</h1>
+
+<div class="heart">❤️ ❤️ ❤️</div>
+
+<button onclick="next('messageAsk')">
+Next →
+</button>
+
+</div>
+
+
+<div id="messageAsk" class="page">
+
+<h2>
+Hey Akshita, I have a message for you.
+</h2>
+
+<p>
+Would you like to see it?
+</p>
+
+<button onclick="next('final')">
+Yes 🙂
+</button>
+
+<button onclick="next('secret')">
+No 🙂
+</button>
+
+</div>
+
+
+<div id="secret" class="page">
+
+<img src="goat_happy.png">
+
+<h2>I knew you would come back 😌</h2>
+
+<p>I will still be here.</p>
+
+<button onclick="next('messageAsk')">
+Go back 🔙
+</button>
+
+</div>
+
+
+<div id="final" class="page">
+
+<div class="note">
+
+Akshita, I know whatever I did was not the right way and that is not how things work. I never talked to you and suddenly I confessed. If I ever made you feel sad, I am really sorry for that.
+
+<br><br>
+
+Anyway, I just wanted to say Happy Birthday. I hope this becomes one of the best birthdays of your life.
+
+<br><br>
+
+– Adarsh
+
+</div>
+
+</div>
+
+
+<script>
+
+function next(page){
+
+document.querySelectorAll('.page')
+.forEach(p=>p.classList.remove('active'));
+
+document.getElementById(page)
+.classList.add('active');
+
+}
+
+function showText(){
+
+document.getElementById("text1")
+.style.display="block";
+
+}
+
+function showCake(){
+
+next("cake");
+
+}
+
+
+async function startMic(){
+
+document.getElementById("blowText")
+.innerText="Listening... blow now";
+
+try{
+
+let stream=
+await navigator.mediaDevices.getUserMedia({audio:true});
+
+let audioContext=
+new AudioContext();
+
+let mic=
+audioContext.createMediaStreamSource(stream);
+
+let analyser=
+audioContext.createAnalyser();
+
+analyser.fftSize=256;
+
+mic.connect(analyser);
+
+let data=
+new Uint8Array(analyser.frequencyBinCount);
+
+function detect(){
+
+analyser.getByteFrequencyData(data);
+
+let volume=
+data.reduce((a,b)=>a+b)/data.length;
+
+if(volume>20){
+
+document.getElementById("flame")
+.style.display="none";
+
+next("celebrate");
+
+stream.getTracks()
+.forEach(track=>track.stop());
+
+return;
+
+}
+
+requestAnimationFrame(detect);
+
+}
+
+detect();
+
+}
+
+catch{
+
+next("celebrate");
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>
